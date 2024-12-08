@@ -1,0 +1,78 @@
+1.RunContainerError: 
+What: The container coulddnt initiate because it encountered a failure before loading the application.
+How to fix it:
+-Check container runtime logs(kubectl decsribe pod <pod-name>)
+-Ensure valid container image and correct runtime settings.
+
+2.ImagePullBackoff:
+What:Happens when a system fails to retrieve the required contrainer image, leaving the container in a waiting state.
+How to fix it:
+- Verify the image name and tag.
+- Ensure the cobatiner registry is accessible and credentails are correct.
+
+3.OOM Killed:
+What: Occurs when a container exceeds its memory limit or tries to acess unavailable resources,flagged by exit code 137.
+How to fix it:
+- Increase resource limits in the pod spec
+- Optimise application memory usage
+
+4.CreateContainerConfigError:
+What:Occurs when k8 fails to create a container due to incorrect or incomplete config in the pod settinhs.
+How to fix it:
+-Check pod spec for invalid configurations
+(e.g.missing env variables,volume mounts)
+-Validate syntax and dependencies kin ConfigMaps or Secrets.
+
+5. CrashLoopBackOff:
+What: Happens when a pod repeatedly crashes and restarts.
+-Inspect logs for errors.
+-Fix appliaction-level bugs or dependency issues.
+
+6.CreateContainerError:
+What: Occurs during actual container creation,even if the setup is correct,due to other reasons.
+How to fix it:
+-Check node capacity ans ensure sufficient resources.
+-Validate config in the pod spec.
+
+7.NodeDiskPressure:
+What: Occurs when a node's filesystem is under the strain due to low available disk space or nodes.
+How to fix to:
+- Clear unused images and containers from the node.
+- Increase the node disk usage capacity or add more nodes.
+
+Q.Wjat is Namespace, and why is it used?
+Why use Namespace:
+1.Resouce Insolation:
+Team and Project Seperation:Different teams or projects can have their own namespaces,preventing resource conflicats and ensuring isloation.
+Environment Islotation:You can create seperate namespaces for development,testing anf prod env.
+
+2.Access Control:
+Role-Bassed Access Control(RBAC):
+You can defin eRBAC roles and bindings within namespaces,granting specific permissions to users or groups for resources in that namespaces.
+
+3.Resource Quotas:
+Resource Limits: You can set limits on resource usage(CPU, memory) per namepaces,ensuirng fair resource allocation and preventing resource exhaustion.
+
+4.N/W Policy Isloation:
+N/W Segmentation:You can define network policies to control network tarffic between poids within and accross namespaces.
+
+Namespaces-Scooped Resources:
+Most K8 resources,such as pods,services,deployments,configmaps and secrets are namepsace-scoped.
+Some resources,like Nodes,StorageClasses, and PersistentVolumes,are cluster-scoped and not configured to namespaces.
+You can create namespaces using the kubectl create namepsaces command.
+You can delete namespaces using the kubectl delete namespaces command.
+
+ Q.How to debug container logs if two containers are running inside a single pod?
+- Use kubectl logs to list all pods in our namespaces.
+- Use kubectl decsribe pods
+- use kubectl get pods
+kubectl logs <pod-name> --all-ontainers=true
+Tailing logs:Use the flag -f flag to continiously tail the logs,whcih is helpful in monitoring real=-time output.
+Filtering logs:use grep or sed to filter the logs based on specific keywords or patterns.
+Using a Logging Tool: Cosnider using logging tool solution like elasticsearch,fluentd and kibana or a cloud-native logging sol like loki to aggregate and analyse the logs from multiple pods and containers.
+For debugging using kubectl exec to execute commands directly within the cntainer.
+Ephermeral Containers: For complex debugging scenarios,you can use ephemeral containers to add debugging tools or scripts to your pod without restarting it.
+
+
+
+
