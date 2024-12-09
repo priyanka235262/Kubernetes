@@ -116,3 +116,19 @@ kubectl config get-contexts: Lists available contexts (clusters and users).
 kubectl config use-context <context-name>: Switches to a specific context.
 kubectl cluster-info: Displays cluster information.
 kubectl version: Displays the Kubernetes version.
+
+Pod: Represents a single instance of a running application. It's the smallest deployable unit in Kubernetes.   
+Deployment: Manages and automates the deployment and updates of Pods.   
+ReplicaSet: Manages a set of Pods with the same labels. Deployments use ReplicaSets to manage their Pods.   
+Service: Exposes a set of Pods as a network service. This allows you to access your application within or outside the cluster.   
+ConfigMap: Stores configuration data as key-value pairs.   
+Secret: Stores sensitive information securely.   
+PersistentVolume: Represents a piece of storage that can be dynamically provisioned to Pods.   
+PersistentVolumeClaim: A request for storage by a user.   
+Job: Runs a single, complete task to completion.   
+CronJob: Schedules Jobs to run periodically.   
+StatefulSet: Manages stateful applications that require a stable network identity and persistent storage.   
+DaemonSet: Ensures that all nodes in a cluster run a single instance of a Pod.   
+Namespace: Organizes Kubernetes resources into separate logical partitions.
+
+
