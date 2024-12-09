@@ -1,0 +1,86 @@
+#Argo CD
+Argo CD is implemented as a K8 controller whhich continiously monitors running applications and compares the current,live state against the desired target state(as applicable in the git repo).A deployed application whose live state deviates from the target state is considere OutOfSync.Argo CD reports & visualises the differeneces,while providing facilities to automatically or manually sync the live state back to the desired state.
+Any modifications made to the desired target state in the Git repo can be automatically applied and reflected in the speicified target env.
+
+How to install ArgoCD?
+1. Prerequisites
+
+Kubernetes Cluster: Ensure you have a running Kubernetes cluster (e.g., on-premises, cloud providers like AWS, Azure, GKE).
+kubectl: Install and configure kubectl to interact with your cluster.
+Helm: Install Helm, a package manager for Kubernetes.
+2. Install ArgoCD
+
+Using Helm:
+
+Add the ArgoCD Helm repository:
+
+Bash
+
+helm repo add argocd https://argocd.github.io/argocd
+Install ArgoCD:
+
+Bash
+
+helm install argocd argocd/argocd \
+  --set server.namespace=argocd \
+  --set rbac.create=true \
+Manual Installation:
+
+Create a namespace for ArgoCD:
+
+Bash
+
+kubectl create namespace argocd
+Deploy ArgoCD components:
+
+Download the ArgoCD manifests:
+
+Bash
+
+curl -s https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml -o install.yaml
+Apply the manifests:
+
+Bash
+
+kubectl apply -n argocd -f install.yaml 
+3. Access the ArgoCD UI
+
+Find the ArgoCD service:
+
+Bash
+
+kubectl get service argocd-server -n argocd
+Note the external IP or port-forward:
+
+If the service has an external IP, use it to access the UI.
+
+If not, port-forward locally:
+
+Bash
+
+kubectl port-forward service/argocd-server -n argocd 8080:80
+Open your browser and navigate to:
+
+http://localhost:8080 (if using port-forwarding)
+Or the external IP of the argocd-server service
+Use the default credentials:
+
+Username: admin
+Password: admin
+4. Configure ArgoCD
+
+Create a Git repository: Store your application manifests (e.g., in YAML format) in a Git repository (e.g., GitHub, GitLab, Bitbucket).
+Create an Application in ArgoCD:
+Add Repository: Connect ArgoCD to your Git repository.
+Define Application: Specify the path to your manifests within the repository, target namespace, and other settings.
+Synchronize Application: ArgoCD will compare the desired state (defined in your manifests) with the actual state of your application in the Kubernetes cluster.
+5. Monitor and Manage Applications
+
+Track Application Status: Monitor the synchronization status of your applications within the ArgoCD UI.
+Rollback Changes: Easily revert to previous deployments if necessary.
+Manage Deployments: Trigger deployments, view deployment history, and manage application configurations.
+Important Notes
+
+RBAC: Ensure proper Role-Based Access Control (RBAC) is configured to restrict access to ArgoCD and manage permissions for different users.
+Security: Consider security best practices, such as using strong passwords, limiting network access, and regularly updating ArgoCD.
+Scalability: For production environments, you may need to scale ArgoCD components and optimize its performance.
