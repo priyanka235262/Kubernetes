@@ -1,0 +1,139 @@
+#YAML files
+YAML
+
+DEPLOYMENT.YAML:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app-container
+        image: my-registry.com/my-app:latest
+        ports:
+        - containerPort: 8080
+
+
+SERVICE.YAML:
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-service
+spec:
+  selector:
+    app: my-app # Matches labels on Pods you want to target
+  ports:
+  - protocol: TCP
+    port: 80 
+    targetPort: 8080 # Port on the Pods
+  type: ClusterIP # Other options: NodePort, LoadBalancer 
+
+
+INGRESS.YAML
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  rules:
+  - host: "my-app.example.com" # Hostname for this rule
+    http:
+      paths:
+      - path: / 
+        pathType: Prefix 
+        backend:
+          service:
+            name: my-app-service 
+            port: 
+              number: 80 
+
+NAMESPACE.YAML:
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace
+
+
+CONFIGMAPS.YAML:apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+data:
+  app-config.properties: |
+    server.port=8080
+    database.url=jdbc:mysql://my-database-host:3306/mydatabase
+    username=myuser
+    password=mypassword
+
+How do we perform on-premises deployment in k8nfrom scratch
+
+
+
+Show drafts
+
+1. Prerequisites
+
+Hardware:
+Nodes: Determine the number and specifications of physical or virtual machines (VMs) required for your cluster. Consider factors like CPU, memory, storage, and networking.
+Network: Ensure a reliable and high-bandwidth network infrastructure with sufficient bandwidth for communication between nodes and with external systems.
+Operating System: Install a suitable operating system (e.g., Linux distributions like Ubuntu, CentOS, or RHEL) on each node.
+2. Choose an Installation Method
+
+kubeadm: A command-line tool for bootstrapping a minimal Kubernetes cluster. It's suitable for smaller clusters and provides flexibility.   
+Kops: A command-line tool for creating, deploying, and managing production-grade Kubernetes clusters. It offers features like automated provisioning and scaling.   
+Third-Party Distributions: Consider distributions like Rancher, OpenShift, or K3s, which offer additional features and management tools.
+3. Install Kubernetes
+
+Using kubeadm (Example):
+Initialize the Master Node:
+Install kubeadm, Docker, and other required packages.
+Run kubeadm init to initialize the master node and generate join tokens.
+Join Worker Nodes:
+On each worker node, install kubeadm, Docker, and other required packages.   
+Use the join token from the master node to join the worker nodes to the cluster.   
+4. Post-Installation Configuration
+
+Networking:
+Configure Ingress: Set up an Ingress controller (e.g., Nginx Ingress Controller, Traefik) to route external traffic to your applications.   
+Network Policies: Implement network policies to control communication between pods and services within your cluster.   
+Storage:
+Provision Persistent Volumes: Set up persistent storage for your applications using technologies like local storage, network storage (NFS, iSCSI), or cloud storage.   
+Security:
+RBAC: Implement Role-Based Access Control (RBAC) to manage user permissions and restrict access to sensitive resources.   
+Security Context: Configure security contexts for pods to restrict their capabilities and improve security.   
+Monitoring:
+Install Monitoring Tools: Deploy monitoring tools like Prometheus, Grafana, and Jaeger to collect metrics, logs, and traces from your applications and the Kubernetes cluster.
+5. Application Deployment and Management
+
+Deploy Applications: Use tools like kubectl, Helm, or ArgoCD to deploy and manage your applications on the cluster.
+Scaling and Upgrades: Scale your applications up or down based on demand, and perform rolling upgrades to minimize downtime.   
+Troubleshooting: Use tools like kubectl and monitoring dashboards to troubleshoot issues with your applications and the cluster.
+6. Ongoing Maintenance
+
+Regular Updates: Keep your Kubernetes cluster and its components updated with the latest security patches and bug fixes.   
+Backups and Disaster Recovery: Implement strategies for backing up your cluster data and restoring it in case of failures.
+Capacity Planning: Monitor resource usage and plan for future capacity needs.
+Additional Considerations:
+
+High Availability: Design your cluster for high availability by setting up multiple master nodes and ensuring that critical components are replicated.   
+Disaster Recovery: Plan for disaster recovery scenarios, such as data center failures, by implementing off-site backups or using a multi-cloud or hybrid cloud strategy.   
+Security Best Practices: Adhere to security best practices, such as using strong passwords, limiting network access, and regularly auditing your cluster.   
+Tools and Resources:
+
+Kubernetes Documentation: https://kubernetes.io/
+kubeadm: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/   
+Kops: https://kops.sigs.k8s.io/   
+Helm: https://helm.sh/
+ArgoCD: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/   
+
+
+
